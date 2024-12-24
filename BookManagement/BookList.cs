@@ -8,31 +8,38 @@ namespace BookManagement
 {
     internal class BookList
     {
-        private Dictionary<int , string> books;
+        private Dictionary<int , Book> books;
         private int counter;
         public BookList()
         {
-            books = new Dictionary<int, string>();
+            books = new Dictionary<int, Book>();
             counter = 0;
         }
 
-        public Dictionary<int, string> GetBooksList()
+        public Dictionary<int, Book> GetBooksList()
         {
             return books;
         }
 
-        public void printBooksInList(List<Book> books)
+        public void AddBook(Book book)
         {
+            book.BookId = ++counter;
+            books[counter] = book;
+
+        }
+        public void PrintBooksInList()
+        {
+            if (counter == 0) { Console.WriteLine("No book is there."); return; }
             Console.WriteLine($"{"Title",-20} {"Author",-20} {"Quantity",-10} {"Price",-10} {"BookId",-10}");
             Console.WriteLine("-------------------------------------------------------------------");
 
             // Print each book's details
             foreach (var book in books)
             {
-                Console.WriteLine($"{book.Title,-20} {book.Author,-20} {book.Quantity,-10} {book.Price,-10:C} {book.BookId,-10}");
+                Console.WriteLine($"{book.Value.Title,-20} {book.Value.Author,-20} {book.Value.Quantity,-10} {book.Value.Price,-10:C} {book.Value.BookId,-10}");
             }
         }
-        public void ReturnBook(Borrower borrower , Book book)
+        public void ReturnBook(ref Borrower borrower , ref BookList books)
         {
             if (borrower.GetBorrowHistory().Count <= 0)
             {
@@ -44,16 +51,36 @@ namespace BookManagement
                 transaction.IsReturned = true;
                 transaction.ReturnDate = DateTime.Now;
                 borrower.PopTransactionToHistory();
-                borrower.PushTransactionToHistory(transaction);
+                //borrower.PushTransactionToHistory(transaction);
+                books.GetBooksList()[transaction.BookIssued.BookId].Quantity += 1;
+                Console.WriteLine("Book Returned successfuly.");
             }
         }
         public void IssueBook(ref Borrower borrower,ref Book book)
         {
-           
-                BorrowTransaction transaction = new BorrowTransaction(book);
-                transaction.IsReturned = false;
-                transaction.IssueDate = DateTime.Now;
-                borrower.PushTransactionToHistory(transaction);
+
+            if (books.ContainsKey(book.BookId))
+            {
+                if (books[book.BookId].Quantity > 0)
+                {
+                    BorrowTransaction transaction = new BorrowTransaction(book);
+                    transaction.IsReturned = false;
+                    transaction.IssueDate = DateTime.Now;
+                    borrower.PushTransactionToHistory(transaction);
+                    books[book.BookId].Quantity -= 1;
+                    Console.WriteLine("Book Issued successfuly.");
+                }
+                else
+                {
+                    Console.WriteLine("Book is not available.");
+                }
+                
+            }
+            else
+            {
+                Console.WriteLine("Wrong book Id");
+            }
+               
             
         }
     }

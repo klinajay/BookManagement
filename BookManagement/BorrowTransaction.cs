@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +31,10 @@ namespace BookManagement
         public void PrintTransaction()
         {
             // Assuming bookIssued is a valid object and Title is a string property
-            Console.WriteLine($"{transactionId,-10} {bookIssued?.Title,-30} {isReturned,-5} {issueDate,-15} {ReturnDate,-15}");
+            string isReturn;
+            if (IsReturned) isReturn = "Yes";
+            else isReturn = "No";
+            Console.WriteLine($"{transactionId,-10} {bookIssued.Title,-30} {isReturn,-5} {issueDate,-15} {ReturnDate,-15}");
 
         }
     }

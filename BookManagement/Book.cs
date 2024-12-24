@@ -28,7 +28,7 @@
        
         public string Title { get { return title; } }
         public string Author { get { return author; } }
-        public int Quantity { get { return availableQuantity; } }       
+        public int Quantity { get { return availableQuantity; } set { availableQuantity = value; } }       
         public int Price { get { return price; } }
 
         public void PrintBookInfo()

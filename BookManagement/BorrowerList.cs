@@ -15,13 +15,15 @@ namespace BookManagement
             borrowerDictionary = new Dictionary<int, Borrower>();   
             count = 0;  
         }
-
+        public Dictionary<int, Borrower> GetBorrowerList() { return borrowerDictionary; }
         public void AddBorrwer(Borrower borrower)
         {
             borrowerDictionary[++count] = borrower;
             borrower.Id = count;
         }
-
-
+        public void updateBorrowerList(Borrower borrower, int id)
+        {
+            borrowerDictionary[id] = borrower;
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace BookManagement
             this.name = name;  
             this.id = id;
             this.phoneNumber = phoneNumber;
+            borrowHistory = new Stack<BorrowTransaction>();
+
         }
 
         public string Name { get { return this.name; } set { name = value; } }
@@ -46,7 +48,7 @@ namespace BookManagement
         {
            foreach(var transaction in this.borrowHistory)
             {
-                Console.WriteLine(transaction.PrintTransaction);
+                transaction.PrintTransaction();
             }
         }
 
