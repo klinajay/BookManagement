@@ -13,14 +13,12 @@ namespace BookManagement
         private DateTime returnDate;
         private bool isReturned;
         private int transactionId;
+        int count = 0;
 
-        public BorrowTransaction(Book book, DateTime issueDate, DateTime returnDate, bool isReturned, int transactionId)
+        public BorrowTransaction(Book book)
         {
             this.bookIssued = book;
-            this.issueDate = issueDate;
-            this.returnDate = returnDate;
-            this.isReturned = isReturned;
-            this.transactionId = transactionId;
+            this.transactionId = ++count;
         }
 
         public Book BookIssued { get { return bookIssued; } set { bookIssued = value; } }
@@ -29,6 +27,11 @@ namespace BookManagement
         public bool IsReturned { get { return isReturned; } set { isReturned = value; } }
         public int TransactionId { get { return transactionId; } set { transactionId = value; } }
 
+        public void PrintTransaction()
+        {
+            // Assuming bookIssued is a valid object and Title is a string property
+            Console.WriteLine($"{transactionId,-10} {bookIssued?.Title,-30} {isReturned,-5} {issueDate,-15} {ReturnDate,-15}");
 
+        }
     }
 }

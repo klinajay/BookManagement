@@ -24,6 +24,7 @@ namespace BookManagement
         public int Id { get { return this.id; } set { id = value; } }
         public string PhoneNumber { get { return this.name; } set { phoneNumber = value; } }
         public Stack<BorrowTransaction> GetBorrowHistory() { return this.borrowHistory; }
+        
 
         public void PushTransactionToHistory(BorrowTransaction transaction)
         {
@@ -39,6 +40,13 @@ namespace BookManagement
             else
             {
                 this.borrowHistory.Pop();
+            }
+        }
+        public void PrintTransactionHistory()
+        {
+           foreach(var transaction in this.borrowHistory)
+            {
+                Console.WriteLine(transaction.PrintTransaction);
             }
         }
 
