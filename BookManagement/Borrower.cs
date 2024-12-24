@@ -11,6 +11,7 @@ namespace BookManagement
         private string name;
         private int id;
         private string phoneNumber;
+        private Stack<BorrowTransaction> borrowHistory;
         
         public Borrower(string name, int id, string phoneNumber)
         {
@@ -22,6 +23,24 @@ namespace BookManagement
         public string Name { get { return this.name; } set { name = value; } }
         public int Id { get { return this.id; } set { id = value; } }
         public string PhoneNumber { get { return this.name; } set { phoneNumber = value; } }
+        public Stack<BorrowTransaction> GetBorrowHistory() { return this.borrowHistory; }
+
+        public void PushTransactionToHistory(BorrowTransaction transaction)
+        {
+            this.borrowHistory.Push(transaction);
+
+        }
+        public void PopTransactionToHistory()
+        {
+            if(this.borrowHistory.Count <= 0)
+            {
+                Console.WriteLine("You have not issued book recently.");
+            }
+            else
+            {
+                this.borrowHistory.Pop();
+            }
+        }
 
     }
 }

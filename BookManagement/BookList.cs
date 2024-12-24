@@ -8,15 +8,15 @@ namespace BookManagement
 {
     internal class BookList
     {
-        private List<KeyValuePair<int , string>> books;
+        private Dictionary<int , string> books;
         private int counter;
         public BookList()
         {
-            books = new List<KeyValuePair<int, string>>();
+            books = new Dictionary<int, string>();
             counter = 0;
         }
 
-        public List<KeyValuePair<int, string>> GetBooksList()
+        public Dictionary<int, string> GetBooksList()
         {
             return books;
         }
@@ -32,5 +32,6 @@ namespace BookManagement
                 Console.WriteLine($"{book.Title,-20} {book.Author,-20} {book.Quantity,-10} {book.Price,-10:C} {book.BookId,-10}");
             }
         }
+
     }
 }
