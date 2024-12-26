@@ -69,7 +69,10 @@ internal class Program
         bookList.GetOrderedBookInDescending(false);
         //where condition filtering
         bookList.GetBookByTwoWhere(true);
-      
+        //Filtering using custom extension methods
+        bookList.GetBookByExtensionMethod(true,500);
+        //using SingleorDefault
+        bookList.GetSingleBook(true,100);
     }
     public static void AddDemoData()
     {

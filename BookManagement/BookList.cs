@@ -82,9 +82,9 @@ namespace BookManagement
                         select new Book
                         {
                             Title = book.Value.Title,
-                            
-                            Author= book.Value.Author
-                            
+
+                            Author = book.Value.Author
+
                             ,
                         }).ToList();
             }
@@ -93,7 +93,7 @@ namespace BookManagement
                 list = books.Select(book => new Book
                 {
                     Title = book.Value.Title,
-                   Author= book.Value.Author,
+                    Author = book.Value.Author,
                 }).ToList();
             }
 
@@ -105,15 +105,15 @@ namespace BookManagement
 
         public void AnonymousClass(bool useQuerySyntax)
         {
-            
+
             if (useQuerySyntax)
             {
                 var list = (from book in books
-                        select new
-                        {
-                            Identifier = book.Value.BookId,
-                            BookName = book.Value.Title,
-                        }).ToList();
+                            select new
+                            {
+                                Identifier = book.Value.BookId,
+                                BookName = book.Value.Title,
+                            }).ToList();
 
                 foreach (var item in list)
                 {
@@ -124,7 +124,8 @@ namespace BookManagement
             }
             else
             {
-                var list = books.Select(book => new {
+                var list = books.Select(book => new
+                {
                     Identifier = book.Value.BookId,
                     BookName = book.Value.Title,
                 }).ToList();
@@ -141,7 +142,7 @@ namespace BookManagement
             List<Book> list = new List<Book>();
             if (useQuerySyntax)
             {
-                list =( from book in books orderby book.Value.Price descending , book.Value.Title select book.Value).ToList();
+                list = (from book in books orderby book.Value.Price descending, book.Value.Title select book.Value).ToList();
             }
             else
             {
@@ -160,9 +161,9 @@ namespace BookManagement
         public void GetOrderedBooks(bool useQuerySyntax)
         {
             List<Book> list = new List<Book>();
-            if(useQuerySyntax)
+            if (useQuerySyntax)
             {
-                list = (from book in books orderby book.Value.BookId select book.Value ).ToList();
+                list = (from book in books orderby book.Value.BookId select book.Value).ToList();
             }
             else
             {
@@ -174,7 +175,7 @@ namespace BookManagement
                 {
                     WriteIndented = true // Makes JSON readable
                 });
-                
+
                 Console.WriteLine(serializedBook);
             }
         }
@@ -196,10 +197,58 @@ namespace BookManagement
                 {
                     WriteIndented = true // Makes JSON readable
                 });
-                
+
                 Console.WriteLine(serializedBook);
             }
         }
+        public void GetBookByExtensionMethod(bool useQuerySyntax, double price)
+        {
+            List<Book> list = new List<Book>();
+            if (useQuerySyntax)
+            {
+                list = (from book in books select book.Value).ByPrice(price).ToList();
+            }
+            else
+            {
+                list = books.Select(book => book.Value).ByPrice(price).ToList();
+            }
+            foreach (var item in list)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+
+                Console.WriteLine(serializedBook);
+            }
+        }
+        public void GetSingleBook(bool useQuerySyntax, double price)
+        {
+            Book book1 = new Book();
+            if (useQuerySyntax)
+            {
+                book1 = (from book in books where book.Value.Price < price select book.Value).SingleOrDefault();
+            }
+            else
+            {
+                book1 = books.Select(book => book.Value).SingleOrDefault(book => book.Price < price);
+            }
+            
+            if (book1 != null)
+            {
+                string serializedBook = JsonSerializer.Serialize(book1, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+                Console.WriteLine(serializedBook);
+            }
+            else
+            {
+                Console.WriteLine("Not Found");
+            }
+        }
+
+    
         
         public void PrintBooksInList()
         {
