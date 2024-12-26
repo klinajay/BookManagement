@@ -2,11 +2,16 @@
 {
     internal class Book
     {
-        private string title;
-        private string author;
-        private int availableQuantity;
-        private int price;
-        private int bookId;
+        public string title;
+        public string author;
+        public int availableQuantity;
+        public int price;
+        public int bookId;
+
+        public Book()
+        {
+
+        }
 
         public Book( string title, string author, int availableQuantity, int price)
         {
@@ -26,11 +31,7 @@
             }
         }
        
-        public string Title { get { return title; } }
-        public string Author { get { return author; } }
-        public int Quantity { get { return availableQuantity; } set { availableQuantity = value; } }       
-        public int Price { get { return price; } }
-
+       
         public void PrintBookInfo()
         {
             Console.WriteLine($"Title of Book is: {title}");

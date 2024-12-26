@@ -8,7 +8,7 @@ namespace BookManagement
 {
     internal class BookList
     {
-        private Dictionary<int , Book> books;
+        private Dictionary<int, Book> books;
         private int counter;
         public BookList()
         {
@@ -21,12 +21,83 @@ namespace BookManagement
             return books;
         }
 
+        public void printBooksByLooping()
+        {
+            foreach (var item in books)
+            {
+                item.Value.PrintBookInfo();
+            }
+        }
         public void AddBook(Book book)
         {
             book.BookId = ++counter;
             books[counter] = book;
 
         }
+
+        public void GetAll(bool useQuerySyntax)
+        {
+            List<Book> list = new List<Book>();
+            if (useQuerySyntax)
+            {
+                list = (from book in books select book.Value).ToList();
+            }
+            else
+            {
+                list = books.Select(book => book.Value).ToList();
+            }
+
+            Console.WriteLine($"Total Books are {list.Count}");
+
+        }
+
+        public void GetSingleBook(bool useQuerySyntax)
+        {
+            List<string> list = new List<string>();
+
+            if (useQuerySyntax)
+            {
+                list = (from book in books select book.Value.title).ToList();
+            }
+            else
+            {
+                list = books.Select(book => book.Value.title).ToList();
+            }
+
+            foreach (var item in list)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public void GetBookWithSpecificFields(bool useQuerySyntax)
+        {
+            List<Book> list = new List<Book>();
+            if (useQuerySyntax)
+            {
+                list = (from book in books
+                        select new Book
+                        {
+                            title = book.Value.title,
+                            author = book.Value.author,
+                        }).ToList();
+            }
+            else
+            {
+                list = books.Select(book => new Book
+                {
+                    title = book.Value.title,
+                    author = book.Value.author,
+                }).ToList();
+            }
+
+            foreach (var item in list)
+            {
+                item.PrintBookInfo();
+            }
+        }
+    
+
         public void PrintBooksInList()
         {
             if (counter == 0) { Console.WriteLine("No book is there."); return; }
@@ -36,7 +107,7 @@ namespace BookManagement
             // Print each book's details
             foreach (var book in books)
             {
-                Console.WriteLine($"{book.Value.Title,-20} {book.Value.Author,-20} {book.Value.Quantity,-10} {book.Value.Price,-10:C} {book.Value.BookId,-10}");
+                Console.WriteLine($"{book.Value.title,-20} {book.Value.author,-20} {book.Value.availableQuantity,-10} {book.Value.price,-10:C} {book.Value.BookId,-10}");
             }
         }
         public void ReturnBook(ref Borrower borrower , ref BookList books)
@@ -52,7 +123,7 @@ namespace BookManagement
                 transaction.ReturnDate = DateTime.Now;
                 borrower.PopTransactionToHistory();
                 //borrower.PushTransactionToHistory(transaction);
-                books.GetBooksList()[transaction.BookIssued.BookId].Quantity += 1;
+                books.GetBooksList()[transaction.BookIssued.BookId].availableQuantity += 1;
                 Console.WriteLine("Book Returned successfuly.");
             }
         }
@@ -61,13 +132,13 @@ namespace BookManagement
 
             if (books.ContainsKey(book.BookId))
             {
-                if (books[book.BookId].Quantity > 0)
+                if (books[book.BookId].availableQuantity > 0)
                 {
                     BorrowTransaction transaction = new BorrowTransaction(book);
                     transaction.IsReturned = false;
                     transaction.IssueDate = DateTime.Now;
                     borrower.PushTransactionToHistory(transaction);
-                    books[book.BookId].Quantity -= 1;
+                    books[book.BookId].availableQuantity -= 1;
                     Console.WriteLine("Book Issued successfuly.");
                 }
                 else

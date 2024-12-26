@@ -34,7 +34,7 @@ namespace BookManagement
             string isReturn;
             if (IsReturned) isReturn = "Yes";
             else isReturn = "No";
-            Console.WriteLine($"{transactionId,-10} {bookIssued.Title,-30} {isReturn,-5} {issueDate,-15} {ReturnDate,-15}");
+            Console.WriteLine($"{transactionId,-10} {bookIssued.title,-30} {isReturn,-5} {issueDate,-15} {ReturnDate,-15}");
 
         }
     }

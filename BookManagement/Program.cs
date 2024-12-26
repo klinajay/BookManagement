@@ -9,51 +9,55 @@ internal class Program
         AddDemoData();
 
         Console.WriteLine("**************Welcome to Book Management App*****************");
-        Console.Write("Enter your id.");
-        int.TryParse(Console.ReadLine(), out int borrowerId);
-        Console.WriteLine("Enter proper action number.");
-        Console.WriteLine("1: Issue Book 2: Return Book 3:View Borrow history");
-        int.TryParse(Console.ReadLine(), out int action);
+        //Console.Write("Enter your id.");
+        //int.TryParse(Console.ReadLine(), out int borrowerId);
+        //Console.WriteLine("Enter proper action number.");
+        //Console.WriteLine("1: Issue Book 2: Return Book 3:View Borrow history");
+        //int.TryParse(Console.ReadLine(), out int action);
 
-        do
-        {
-            
-            switch (action)
-            {
-                case 1:
-                    {
-                        Console.Write("Enter id of book.");
-                        int.TryParse(Console.ReadLine(),out int id);
-                        
-                        Borrower borrower = borrowerList.GetBorrowerList()[borrowerId];
-                        Book book = bookList.GetBooksList()[id];
-                        bookList.IssueBook(ref borrower, ref book);
-                        borrowerList.updateBorrowerList(borrower,borrowerId);
-                        break;
+        //do
+        //{
 
-                    }
-                    case 2:
-                    {
-                        
-                        Borrower borrower = borrowerList.GetBorrowerList()[borrowerId];
-                        bookList.ReturnBook(ref borrower, ref bookList);
-                        borrowerList.updateBorrowerList(borrower, borrowerId);
-                        break;
+        //    switch (action)
+        //    {
+        //        case 1:
+        //            {
+        //                Console.Write("Enter id of book.");
+        //                int.TryParse(Console.ReadLine(),out int id);
 
-                    }
-                case 3:
-                    {
-                        
-                        Borrower borrower = borrowerList.GetBorrowerList()[borrowerId];
-                        borrower.PrintTransactionHistory();
-                        break;
-                    }
-            }
-            Console.WriteLine("1: Issue Book 2: Return Book 3:View Borrow history");
-            int.TryParse(Console.ReadLine(), out  action);
-        }
-        while (action <= 3 && action > 0);
-        Console.WriteLine("Hello, World!");
+        //                Borrower borrower = borrowerList.GetBorrowerList()[borrowerId];
+        //                Book book = bookList.GetBooksList()[id];
+        //                bookList.IssueBook(ref borrower, ref book);
+        //                borrowerList.updateBorrowerList(borrower,borrowerId);
+        //                break;
+
+        //            }
+        //            case 2:
+        //            {
+
+        //                Borrower borrower = borrowerList.GetBorrowerList()[borrowerId];
+        //                bookList.ReturnBook(ref borrower, ref bookList);
+        //                borrowerList.updateBorrowerList(borrower, borrowerId);
+        //                break;
+
+        //            }
+        //        case 3:
+        //            {
+
+        //                Borrower borrower = borrowerList.GetBorrowerList()[borrowerId];
+        //                borrower.PrintTransactionHistory();
+        //                break;
+        //            }
+        //    }
+        //    Console.WriteLine("1: Issue Book 2: Return Book 3:View Borrow history");
+        //    int.TryParse(Console.ReadLine(), out  action);
+        //}
+        //while (action <= 3 && action > 0);
+        //Console.WriteLine("Hello, World!");
+        bookList.printBooksByLooping();
+        bookList.GetAll(true);
+        bookList.GetSingleBook(false);
+        bookList.GetBookWithSpecificFields(true);
     }
     public static void AddDemoData()
     {
@@ -77,6 +81,6 @@ internal class Program
         borrowerList.AddBorrwer(b3);
         borrowerList.AddBorrwer(b4);
         borrowerList.AddBorrwer(b5);
-        bookList.PrintBooksInList();
+        //bookList.PrintBooksInList();
     }
 }
