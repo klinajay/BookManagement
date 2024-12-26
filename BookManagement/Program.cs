@@ -67,6 +67,9 @@ internal class Program
         bookList.GetOrderedBooks(true);
         //orderbydescending and .thenby
         bookList.GetOrderedBookInDescending(false);
+        //where condition filtering
+        bookList.GetBookByTwoWhere(true);
+      
     }
     public static void AddDemoData()
     {

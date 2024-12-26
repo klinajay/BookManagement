@@ -174,11 +174,33 @@ namespace BookManagement
                 {
                     WriteIndented = true // Makes JSON readable
                 });
-                item.PrintBookInfo();
+                
                 Console.WriteLine(serializedBook);
             }
         }
 
+        public void GetBookByTwoWhere(bool useQuerySyntax)
+        {
+            List<Book> list = new List<Book>();
+            if (useQuerySyntax)
+            {
+                list = (from book in books where book.Value.Author == "J. Doe" && book.Value.Price < 5000 select book.Value).ToList();
+            }
+            else
+            {
+                list = books.Where(book => book.Value.Author == "J. Doe" && book.Value.Price < 5000).Select(book => book.Value).ToList();
+            }
+            foreach (var item in list)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+                
+                Console.WriteLine(serializedBook);
+            }
+        }
+        
         public void PrintBooksInList()
         {
             if (counter == 0) { Console.WriteLine("No book is there."); return; }
