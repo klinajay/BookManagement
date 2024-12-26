@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace BookManagement
 {
@@ -57,11 +60,11 @@ namespace BookManagement
 
             if (useQuerySyntax)
             {
-                list = (from book in books select book.Value.title).ToList();
+                list = (from book in books select book.Value.Title).ToList();
             }
             else
             {
-                list = books.Select(book => book.Value.title).ToList();
+                list = books.Select(book => book.Value.Title).ToList();
             }
 
             foreach (var item in list)
@@ -78,16 +81,19 @@ namespace BookManagement
                 list = (from book in books
                         select new Book
                         {
-                            title = book.Value.title,
-                            author = book.Value.author,
+                            Title = book.Value.Title,
+                            
+                            Author= book.Value.Author
+                            
+                            ,
                         }).ToList();
             }
             else
             {
                 list = books.Select(book => new Book
                 {
-                    title = book.Value.title,
-                    author = book.Value.author,
+                    Title = book.Value.Title,
+                   Author= book.Value.Author,
                 }).ToList();
             }
 
@@ -96,7 +102,82 @@ namespace BookManagement
                 item.PrintBookInfo();
             }
         }
-    
+
+        public void AnonymousClass(bool useQuerySyntax)
+        {
+            
+            if (useQuerySyntax)
+            {
+                var list = (from book in books
+                        select new
+                        {
+                            Identifier = book.Value.BookId,
+                            BookName = book.Value.Title,
+                        }).ToList();
+
+                foreach (var item in list)
+                {
+                    Console.WriteLine($"{nameof(item.BookName)} : {item.BookName}");
+                    Console.WriteLine($"{nameof(item.Identifier)} : {item.Identifier}");
+
+                }
+            }
+            else
+            {
+                var list = books.Select(book => new {
+                    Identifier = book.Value.BookId,
+                    BookName = book.Value.Title,
+                }).ToList();
+                foreach (var item in list)
+                {
+                    Console.WriteLine($"{nameof(item.BookName)} : {item.BookName}");
+                    Console.WriteLine($"{nameof(item.Identifier)} : {item.Identifier}");
+
+                }
+            }
+        }
+        public void GetOrderedBookInDescending(bool useQuerySyntax)
+        {
+            List<Book> list = new List<Book>();
+            if (useQuerySyntax)
+            {
+                list =( from book in books orderby book.Value.Price descending , book.Value.Title select book.Value).ToList();
+            }
+            else
+            {
+                list = books.OrderByDescending(book => book.Value.Price).ThenBy(book => book.Value.Title).Select(book => book.Value).ToList();
+            }
+            foreach (var item in list)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+                item.PrintBookInfo();
+                Console.WriteLine(serializedBook);
+            }
+        }
+        public void GetOrderedBooks(bool useQuerySyntax)
+        {
+            List<Book> list = new List<Book>();
+            if(useQuerySyntax)
+            {
+                list = (from book in books orderby book.Value.BookId select book.Value ).ToList();
+            }
+            else
+            {
+                list = books.OrderBy(book => book.Value.BookId).Select(book => book.Value).ToList();
+            }
+            foreach (var item in list)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+                item.PrintBookInfo();
+                Console.WriteLine(serializedBook);
+            }
+        }
 
         public void PrintBooksInList()
         {
@@ -107,7 +188,7 @@ namespace BookManagement
             // Print each book's details
             foreach (var book in books)
             {
-                Console.WriteLine($"{book.Value.title,-20} {book.Value.author,-20} {book.Value.availableQuantity,-10} {book.Value.price,-10:C} {book.Value.BookId,-10}");
+                Console.WriteLine($"{book.Value.Title,-20} {book.Value.Author,-20} {book.Value.AvailableQuantity,-10} {book.Value.Price,-10:C} {book.Value.BookId,-10}");
             }
         }
         public void ReturnBook(ref Borrower borrower , ref BookList books)
@@ -123,7 +204,7 @@ namespace BookManagement
                 transaction.ReturnDate = DateTime.Now;
                 borrower.PopTransactionToHistory();
                 //borrower.PushTransactionToHistory(transaction);
-                books.GetBooksList()[transaction.BookIssued.BookId].availableQuantity += 1;
+                books.GetBooksList()[transaction.BookIssued.BookId].AvailableQuantity += 1;
                 Console.WriteLine("Book Returned successfuly.");
             }
         }
@@ -132,13 +213,13 @@ namespace BookManagement
 
             if (books.ContainsKey(book.BookId))
             {
-                if (books[book.BookId].availableQuantity > 0)
+                if (books[book.BookId].AvailableQuantity > 0)
                 {
                     BorrowTransaction transaction = new BorrowTransaction(book);
                     transaction.IsReturned = false;
                     transaction.IssueDate = DateTime.Now;
                     borrower.PushTransactionToHistory(transaction);
-                    books[book.BookId].availableQuantity -= 1;
+                    books[book.BookId].AvailableQuantity -= 1;
                     Console.WriteLine("Book Issued successfuly.");
                 }
                 else

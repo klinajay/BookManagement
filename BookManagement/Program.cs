@@ -55,9 +55,18 @@ internal class Program
         //while (action <= 3 && action > 0);
         //Console.WriteLine("Hello, World!");
         bookList.printBooksByLooping();
+        //selecting all fields
         bookList.GetAll(true);
+        //selecting the single fields
         bookList.GetSingleBook(false);
+        //selecting specific columns
         bookList.GetBookWithSpecificFields(true);
+        //Anonymous class
+        bookList.AnonymousClass(true);
+        //orderedby demo
+        bookList.GetOrderedBooks(true);
+        //orderbydescending and .thenby
+        bookList.GetOrderedBookInDescending(false);
     }
     public static void AddDemoData()
     {
