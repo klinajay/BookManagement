@@ -5,7 +5,7 @@
         public string Title { get; set; }
         public string Author { get; set; }
         public int AvailableQuantity { get; set; }
-        public int Price { get; set; }
+        public double   Price { get; set; }
         public int BookId { get; set; }
 
         public Book()
@@ -13,7 +13,7 @@
 
         }
 
-        public Book( string Title, string Author, int AvailableQuantity, int Price)
+        public Book( string Title, string Author, int AvailableQuantity, double Price)
         {
             
             this.Title = Title;

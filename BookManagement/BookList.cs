@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -222,6 +223,7 @@ namespace BookManagement
                 Console.WriteLine(serializedBook);
             }
         }
+
         public void GetSingleBook(bool useQuerySyntax, double price)
         {
             Book book1 = new Book();
@@ -248,8 +250,116 @@ namespace BookManagement
             }
         }
 
-    
-        
+        public void AssigningValueToField(bool useQuerySyntax,double tax)
+        {
+            
+            if (useQuerySyntax)
+            {
+                books = (from book in books let price = book.Value.Price = (tax + book.Value.Price) select book).ToDictionary();
+            }
+            else
+            {
+                foreach (var key in books.Keys.ToList())
+                {
+                    books[key].Price += tax;
+                }
+            }
+            
+            foreach (var item in books)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+
+                Console.WriteLine(serializedBook);
+            }
+        }
+        public void GetTotalAvailableBooksInLibrary(bool useQuerySyntax)
+        {
+            int noOfBooks = 0;
+
+            if (useQuerySyntax)
+            {
+                noOfBooks = (from book in books select book.Value).Sum(book => book.AvailableQuantity);
+            }
+            else
+            {
+                noOfBooks = books.Select(book => book.Value).Sum(book => book.AvailableQuantity);
+            }
+
+
+                Console.WriteLine($"Total Available Books in Library are {noOfBooks}");
+
+        }
+        public void GetBooksByTake(bool useQuerySyntax)
+        {
+            List<Book> list = new List<Book>();
+            if (useQuerySyntax)
+            {
+                list = (from book in books select book.Value).Take(2).ToList();
+            }
+            else
+            {
+                list = books.Select(book => book.Value).Take(2).ToList();
+            }
+            foreach (var item in list)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+                Console.WriteLine(serializedBook);
+            }
+        }
+        public void GetBooksBySkipWhile(bool useQuerySyntax)
+        {
+            List<Book> list = new List<Book>();
+            if (useQuerySyntax)
+            {
+                list = (from book in books select book.Value).SkipWhile(book => book.Price < 500).ToList();
+            }
+            else
+            {
+                list = books.Select(book => book.Value).SkipWhile(book => book.Price < 500).ToList();
+            }
+            foreach (var item in list)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+                Console.WriteLine(serializedBook);
+            }
+        }
+
+        public void GetBookByContains(bool useQuerySyntax, int id)
+        {
+            bool value;
+            BookComparator bookComparator = new BookComparator();
+            Book book1 = new Book()
+            {
+                BookId = id,
+            };
+            if (useQuerySyntax)
+            {
+                value = (from book in books select book.Value).Contains(book1, bookComparator);
+            }
+            else
+            {
+                value = books.Select(book => book.Value).Contains(book1, bookComparator);
+            }
+
+            if (value)
+            {
+                Console.WriteLine("Book is present in the list");
+            }
+            else
+            {
+                Console.WriteLine("Book is not present in the list");
+            } 
+        }
+
         public void PrintBooksInList()
         {
             if (counter == 0) { Console.WriteLine("No book is there."); return; }

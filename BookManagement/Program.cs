@@ -73,6 +73,16 @@ internal class Program
         bookList.GetBookByExtensionMethod(true,500);
         //using SingleorDefault
         bookList.GetSingleBook(true,100);
+        //Assigning values to the particular fields
+        bookList.AssigningValueToField(true,12);
+        //use of sum and foreach function
+        bookList.GetTotalAvailableBooksInLibrary(true);
+        //use of Take and Skip , TAkeWhile and SkipWhile
+        bookList.GetBooksByTake(true);
+        Console.WriteLine("SkipWhile Demo");
+        bookList.GetBooksBySkipWhile(true);
+        Console.WriteLine("Contains Demo");
+        bookList.GetBookByContains(true, 4);
     }
     public static void AddDemoData()
     {
