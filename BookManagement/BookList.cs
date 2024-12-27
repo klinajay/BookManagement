@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -18,6 +19,10 @@ namespace BookManagement
         {
             books = new Dictionary<int, Book>();
             counter = 0;
+        }
+        public Dictionary<int, Book> GetBookList()
+        {
+            return books;
         }
 
         public Dictionary<int, Book> GetBooksList()
@@ -336,7 +341,7 @@ namespace BookManagement
         public void GetBookByContains(bool useQuerySyntax, int id)
         {
             bool value;
-            BookComparator bookComparator = new BookComparator();
+            BookComparatorById bookComparator = new BookComparatorById();
             Book book1 = new Book()
             {
                 BookId = id,
@@ -360,16 +365,62 @@ namespace BookManagement
             } 
         }
 
-        public void PrintBooksInList()
+        public void EqualOrNotBooklists(bool useQuerySyntax)
         {
-            if (counter == 0) { Console.WriteLine("No book is there."); return; }
-            Console.WriteLine($"{"Title",-20} {"Author",-20} {"Quantity",-10} {"Price",-10} {"BookId",-10}");
-            Console.WriteLine("-------------------------------------------------------------------");
-
-            // Print each book's details
-            foreach (var book in books)
+            BookComparator bookComparator = new BookComparator();
+            BookList bookList2 = new BookList();
+            Program.AddDemoData(bookList2);
+            List<Book> list = new List<Book>();
+            foreach (var item in bookList2.GetBooksList())
             {
-                Console.WriteLine($"{book.Value.Title,-20} {book.Value.Author,-20} {book.Value.AvailableQuantity,-10} {book.Value.Price,-10:C} {book.Value.BookId,-10}");
+                list.Add(item.Value);
+            }
+            bool value;
+            if (useQuerySyntax)
+            {
+                value = (from book in books select book.Value).SequenceEqual(list, bookComparator);
+            }
+            else
+            {
+                value = books.Select(book => book.Value).SequenceEqual(list, bookComparator);
+            }
+            if (value)
+            {
+                Console.WriteLine("Both lists are equal");
+            }
+            else
+            {
+                Console.WriteLine("Both lists are not equal");
+
+            }
+        }
+        public void GetBookListDifference(bool useQuerySyntax)
+        {
+            BookComparator bookComparator = new BookComparator();
+            BookList bookList2 = new BookList();
+            Program.AddDemoData2(bookList2);
+            
+            List<Book> list = new List<Book>();
+            foreach (var item in bookList2.GetBooksList())
+            {
+                list.Add(item.Value);
+            }
+
+            if (useQuerySyntax)
+            {
+                list = (from book in books select book.Value).Except(list, bookComparator).ToList();
+            }
+            else
+            {
+                list = books.Select(book => book.Value).Except(list, bookComparator).ToList();
+            }
+            foreach (var item in list)
+            {
+                string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes JSON readable
+                });
+                Console.WriteLine(serializedBook);
             }
         }
         public void ReturnBook(ref Borrower borrower , ref BookList books)
@@ -385,7 +436,8 @@ namespace BookManagement
                 transaction.ReturnDate = DateTime.Now;
                 borrower.PopTransactionToHistory();
                 //borrower.PushTransactionToHistory(transaction);
-                books.GetBooksList()[transaction.BookIssued.BookId].AvailableQuantity += 1;
+                books.GetBookList()[transaction.BookIssued.BookId].AvailableQuantity += 1;
+                //books[transaction.BookIssued.BookId].AvailableQuantity += 1;
                 Console.WriteLine("Book Returned successfuly.");
             }
         }
