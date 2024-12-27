@@ -91,11 +91,12 @@ internal class Program
         //bookList.GetBookListDifference(true);
         //Console.WriteLine("Inner Join Demo");
         //bookList.GetBookByInnerJoin(false);
-        Console.WriteLine("Group Demo");
+        //Console.WriteLine("Group Demo");
 
-        bookList.GetBooksByGroupJoin(true);
+        //bookList.GetBooksByGroupJoin(true);
 
-
+        Console.WriteLine("Left Join Demo");
+        bookList.GetBooksByUingLeftOuterJoin(true);
     }
     public static void AddDemoData(BookList bookList)
     {
