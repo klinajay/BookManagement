@@ -83,12 +83,17 @@ internal class Program
         //bookList.GetBooksBySkipWhile(true);
         //Console.WriteLine("Contains Demo");
         //bookList.GetBookByContains(true, 4);
-        Console.WriteLine("SequenceEqual Demo");
-        Console.WriteLine();
-        bookList.EqualOrNotBooklists(true);
-        Console.WriteLine("Except Demo");
-        Console.WriteLine();
-        bookList.GetBookListDifference(true);
+        //Console.WriteLine("SequenceEqual Demo");
+        //Console.WriteLine();
+        //bookList.EqualOrNotBooklists(true);
+        //Console.WriteLine("Except Demo");
+        //Console.WriteLine();
+        //bookList.GetBookListDifference(true);
+        //Console.WriteLine("Inner Join Demo");
+        //bookList.GetBookByInnerJoin(false);
+        Console.WriteLine("Group Demo");
+
+        bookList.GetBooksByGroupJoin(true);
 
 
     }

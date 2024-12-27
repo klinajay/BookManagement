@@ -423,6 +423,100 @@ namespace BookManagement
                 Console.WriteLine(serializedBook);
             }
         }
+        public void GetBookByInnerJoin(bool useQuerySyntax)
+        {
+            List<Author> authors = new List<Author>
+        {
+            new Author { Id = 1, Name = "John Doe", BookId = 1 },
+            new Author { Id = 2, Name = "Jane Smith", BookId = 2 },
+            new Author { Id = 3, Name = "Mark Twain", BookId = 3 },
+            new Author { Id = 4, Name = "J.K. Rowling", BookId = 4 },
+        };
+
+            if (useQuerySyntax) {
+                var list = (from book in books
+                            join  author in authors on book.Value.BookId equals author.BookId
+                            select new  {
+                        bookName = book.Value.Title,
+                        authorName = author.Name
+                    }).ToList();
+                foreach (var item in list)
+                {
+                    string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                    {
+                        WriteIndented = true // Makes JSON readable
+                    });
+                    Console.WriteLine(serializedBook);
+                }
+            }
+            else
+            {
+                var list = books.Join(
+                    authors,
+                    book => book.Value.BookId,
+                    author => author.BookId,
+                    (book , author) => new {
+                        bookName = book.Value.Title,
+                        authorName = author.Name
+                    }).ToList();
+                foreach (var item in list)
+               {
+                    string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                    {
+                        WriteIndented = true // Makes JSON readable
+                    });
+                    Console.WriteLine(serializedBook);
+                }
+            }
+        }
+        public void GetBooksByGroupJoin(bool useQuerySyntax)
+        {
+            List<Author> authors = new List<Author>
+        {
+            new Author { Id = 1, Name = "John Doe", BookId = 1 },
+            new Author { Id = 2, Name = "Jane Smith", BookId = 2 },
+            new Author { Id = 3, Name = "Mark Twain", BookId = 3 },
+            new Author { Id = 4, Name = "J.K. Rowling", BookId = 4 },
+        };
+            if (useQuerySyntax) { 
+                var list = (from book in books
+                            join author in authors on book.Value.BookId equals author.BookId into authorGroup
+                            select new
+                            {
+                                bookName = book.Value.Title,
+                                authorName = authorGroup.Select(author => author.Name).ToList()
+                            }).ToList();
+                foreach (var item in list)
+                {
+                    string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                    {
+                        WriteIndented = true // Makes JSON readable
+                    });
+                    Console.WriteLine(serializedBook);
+                }
+            }
+            else
+            {
+                var list = books.GroupJoin(
+                    authors,
+                    book => book.Value.BookId,
+                    author => author.BookId,
+                    (book, author) => new
+                    {
+                        bookName = book.Value.Title,
+                        authorName = author.Select(author => author.Name).ToList()
+                    }).ToList();
+                foreach (var item in list)
+                {
+                    string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                    {
+                        WriteIndented = true // Makes JSON readable
+                    });
+                    Console.WriteLine(serializedBook);
+                }
+            }
+
+        }
         public void ReturnBook(ref Borrower borrower , ref BookList books)
         {
             if (borrower.GetBorrowHistory().Count <= 0)
