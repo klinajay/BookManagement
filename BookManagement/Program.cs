@@ -95,8 +95,10 @@ internal class Program
 
         //bookList.GetBooksByGroupJoin(true);
 
-        Console.WriteLine("Left Join Demo");
-        bookList.GetBooksByUingLeftOuterJoin(true);
+        //Console.WriteLine("Left Join Demo");
+        //bookList.GetBooksByUingLeftOuterJoin(true);
+        Console.WriteLine("GroupBy Demo");
+        bookList.GroupBooksUsingGroupBy(true);
     }
     public static void AddDemoData(BookList bookList)
     {
@@ -172,5 +174,38 @@ internal class Program
         borrowerList.AddBorrwer(b5);
         //bookList.PrintBooksInList();
     }
+    public static void AddDemoData3(BookList bookList)
+    {
+        Book book1 = new Book("C# Prog", "J. Doe", 10, 500);
+        Book book2 = new Book("Learn LINQ", "J. Doe", 5, 300); // Same author as book1
+        Book book3 = new Book("ASP.NET Core", "M. Twain", 3, 700);
+        Book book4 = new Book("Algorithms", "T. Cormen", 8, 600);
+        Book book5 = new Book("Pragmatic Prog", "A. Hunt", 6, 450);
+        Book book6 = new Book("Design Patterns", "E. Gamma", 12, 750);
+        Book book7 = new Book("Clean Code", "R. Martin", 15, 550);
+        Book book8 = new Book("Effective C#", "R. Martin", 9, 650); // Same author as book7
+        Book book9 = new Book("Refactoring", "M. Fowler", 7, 600);
+        Book book10 = new Book("Head First Design Patterns", "E. Freeman", 10, 500);
+        Book book11 = new Book("C# in Depth", "J. Skeet", 5, 850);
+        Book book12 = new Book("You Don't Know JS", "K. Simpson", 8, 400);
+        Book book13 = new Book("Introduction to Algorithms", "T. Cormen", 4, 950); // Same author as book4
+        Book book14 = new Book("Domain-Driven Design", "E. Evans", 6, 700);
+        Book book15 = new Book("The Art of Computer Programming", "D. Knuth", 3, 1200);
 
+        bookList.AddBook(book1);
+        bookList.AddBook(book2); // Duplicate author J. Doe
+        bookList.AddBook(book3);
+        bookList.AddBook(book4);
+        bookList.AddBook(book5);
+        bookList.AddBook(book6);
+        bookList.AddBook(book7);
+        bookList.AddBook(book8); // Duplicate author R. Martin
+        bookList.AddBook(book9);
+        bookList.AddBook(book10);
+        bookList.AddBook(book11);
+        bookList.AddBook(book12);
+        bookList.AddBook(book13); // Duplicate author T. Cormen
+        bookList.AddBook(book14);
+        bookList.AddBook(book15);
+    }
 }

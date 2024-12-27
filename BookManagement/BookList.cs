@@ -240,7 +240,7 @@ namespace BookManagement
             {
                 book1 = books.Select(book => book.Value).SingleOrDefault(book => book.Price < price);
             }
-            
+
             if (book1 != null)
             {
                 string serializedBook = JsonSerializer.Serialize(book1, new JsonSerializerOptions
@@ -255,9 +255,9 @@ namespace BookManagement
             }
         }
 
-        public void AssigningValueToField(bool useQuerySyntax,double tax)
+        public void AssigningValueToField(bool useQuerySyntax, double tax)
         {
-            
+
             if (useQuerySyntax)
             {
                 books = (from book in books let price = book.Value.Price = (tax + book.Value.Price) select book).ToDictionary();
@@ -269,7 +269,7 @@ namespace BookManagement
                     books[key].Price += tax;
                 }
             }
-            
+
             foreach (var item in books)
             {
                 string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
@@ -294,7 +294,7 @@ namespace BookManagement
             }
 
 
-                Console.WriteLine($"Total Available Books in Library are {noOfBooks}");
+            Console.WriteLine($"Total Available Books in Library are {noOfBooks}");
 
         }
         public void GetBooksByTake(bool useQuerySyntax)
@@ -362,7 +362,7 @@ namespace BookManagement
             else
             {
                 Console.WriteLine("Book is not present in the list");
-            } 
+            }
         }
 
         public void EqualOrNotBooklists(bool useQuerySyntax)
@@ -399,7 +399,7 @@ namespace BookManagement
             BookComparator bookComparator = new BookComparator();
             BookList bookList2 = new BookList();
             Program.AddDemoData2(bookList2);
-            
+
             List<Book> list = new List<Book>();
             foreach (var item in bookList2.GetBooksList())
             {
@@ -435,11 +435,11 @@ namespace BookManagement
 
             if (useQuerySyntax) {
                 var list = (from book in books
-                            join  author in authors on book.Value.BookId equals author.BookId
-                            select new  {
-                        bookName = book.Value.Title,
-                        authorName = author.Name
-                    }).ToList();
+                            join author in authors on book.Value.BookId equals author.BookId
+                            select new {
+                                bookName = book.Value.Title,
+                                authorName = author.Name
+                            }).ToList();
                 foreach (var item in list)
                 {
                     string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
@@ -455,12 +455,12 @@ namespace BookManagement
                     authors,
                     book => book.Value.BookId,
                     author => author.BookId,
-                    (book , author) => new {
+                    (book, author) => new {
                         bookName = book.Value.Title,
                         authorName = author.Name
                     }).ToList();
                 foreach (var item in list)
-               {
+                {
                     string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
                     {
                         WriteIndented = true // Makes JSON readable
@@ -478,7 +478,7 @@ namespace BookManagement
             new Author { Id = 3, Name = "Mark Twain", BookId = 3 },
             new Author { Id = 4, Name = "J.K. Rowling", BookId = 4 },
         };
-            if (useQuerySyntax) { 
+            if (useQuerySyntax) {
                 var list = (from book in books
                             join author in authors on book.Value.BookId equals author.BookId into authorGroup
                             select new
@@ -526,7 +526,7 @@ namespace BookManagement
             new Author { Id = 3, Name = "Mark Twain", BookId = 3 },
             new Author { Id = 4, Name = "J.K. Rowling", BookId = 4 },
         };
-            if (useQuerySyntax) 
+            if (useQuerySyntax)
             {
                 var list = (from book in books
                             join author in authors on book.Value.BookId equals author.BookId into GroupedInfo
@@ -558,9 +558,43 @@ namespace BookManagement
                     Console.WriteLine(serializedBook);
                 }
 
-            } 
+            }
         }
+        public void GroupBooksUsingGroupBy(bool useQuerySyntax)
+        {
+            BookList books1 = new BookList();
+            Program.AddDemoData(books1);
+            IEnumerable<IGrouping<string, Book>> list = null;
+            if (useQuerySyntax)
+            {
+                list = (from book in books1.GetBooksList()
+                        group book.Value by book.Value.Author into bookGroup
+                        orderby bookGroup.Key
+                        select bookGroup);
+                foreach (var item in list)
+                {
+                    Console.WriteLine(item.Key + " " + item.Count());
+                    string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+                    Console.WriteLine(serializedBook);
+                }
+            }
+            else
+            {
+                list = books1.GetBooksList().Select(book => book.Value).GroupBy(book => book.Author).OrderBy(group => group.Key);
+                foreach (var item in list)
+                {
+                    string serializedBook = JsonSerializer.Serialize(item, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+                    Console.WriteLine(serializedBook);
+                }
 
+            }
+        }
 
         public void ReturnBook(ref Borrower borrower , ref BookList books)
         {
